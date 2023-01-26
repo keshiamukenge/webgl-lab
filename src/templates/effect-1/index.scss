@@ -1,0 +1,54 @@
+$black-color: #252422;
+$white-color: #fffcf2;
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  body {
+    background-color: $white-color;
+
+    header {
+      background-color: transparent;
+      display: flex;
+      justify-content: space-between;
+
+      span {
+        display: inline-block;
+      }
+    }
+
+    main {
+      .container-grid {
+        width: 100%;
+        height: fit-content;
+        position: relative;
+        padding: 0 30%;
+        margin-left: auto;
+
+        div.container-item {
+          margin-bottom: 2rem;
+
+          div.container-item-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+
+            a {
+              width: 100%;
+              height: 100%;
+              display: block;
+            }
+
+            img {
+              width: 100%;
+              height: 100%;
+              visibility: hidden;
+            }
+          }
+        }
+      }
+    }
+  }
+}

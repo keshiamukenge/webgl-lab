@@ -1,0 +1,40 @@
+$black-color: #252422;
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  body {
+    header {
+      background-color: $black-color !important;
+      a,
+      span {
+        color: white !important;
+      }
+    }
+    font-weight: 700;
+    font-style: normal;
+    text-transform: uppercase;
+    background-color: $black-color;
+
+    header {
+      background-color: transparent;
+    }
+
+    main {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+
+      img {
+        visibility: hidden;
+        margin: 2rem auto;
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

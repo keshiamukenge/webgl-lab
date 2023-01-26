@@ -1,0 +1,59 @@
+$black-color: #252422;
+$white-color: #fffcf2;
+
+html {
+  body {
+    background-color: $white-color;
+    font-family: 'Arial';
+
+    main {
+      width: 100vw;
+      min-height: 100vh;
+      height: fit-content;
+      padding: 0 4rem;
+
+      ul {
+        width: 100%;
+        height: fit-content;
+        margin-top: 2rem;
+
+        li {
+          height: fit-content;
+          border-bottom: solid 2px $black-color;
+          padding: 2rem 0;
+
+          &:hover {
+            cursor: pointer;
+            background-color: $black-color;
+            transition: 200ms linear;
+
+            a {
+              color: $white-color;
+              padding-left: 2rem;
+              transition: 200ms linear;
+            }
+          }
+
+          &:first-child {
+            border-top: none;
+          }
+
+          a {
+            width: 100%;
+            height: 100%;
+            font-size: 40px;
+            text-transform: uppercase;
+            display: flex;
+            padding: 0 1rem;
+            color: $black-color;
+
+            span {
+              display: inline-block;
+              margin: auto 0;
+            }
+          }
+        }
+      }
+    }
+  }
+}

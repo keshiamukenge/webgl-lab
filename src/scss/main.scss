@@ -1,0 +1,59 @@
+@import './_locomotive-scroll.scss';
+@import './_reset.scss';
+
+$black-color: #252422;
+$white-color: #fffcf2;
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  body {
+    header {
+      width: 100vw;
+      padding: 1rem 4rem;
+      background-color: $white-color;
+      position: relative;
+      z-index: 999;
+      display: flex;
+      justify-content: space-between;
+      font-family: 'Arial';
+      font-weight: 500;
+      font-style: normal;
+      text-transform: uppercase;
+
+      nav {
+        a {
+          color: $black-color;
+
+          &:hover {
+            opacity: 0.7;
+            transition: 200ms linear;
+          }
+        }
+      }
+
+      span {
+        display: inline-block;
+      }
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    ul {
+      list-style-type: none;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+    }
+  }
+}
