@@ -1,5 +1,4 @@
-import Webgl from '../../js/webgl/webgl'
-import '../../scss/main.scss'
+import Webgl from '../../js/webgl/Webgl'
 
 const vertexShader = `
 float mod289(float x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
