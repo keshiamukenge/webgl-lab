@@ -55,9 +55,7 @@ import Webgl from '../../js/webgl/Webgl'
 				vertexShader: vertexShader,
 				fragmentShader: fragmentShader,
 				onUpdate: () => {
-					setTimeout(() => {
-						onUpdate()
-					}, 1000)
+					onUpdate()
 				},
 			})
 			

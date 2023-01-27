@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import gsap from 'gsap';
 
 export default class Plane {
   constructor(webgl, { imgElement, planeParameters, uniforms, vertexShader, fragmentShader }) {

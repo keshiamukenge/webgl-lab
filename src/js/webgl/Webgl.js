@@ -1,27 +1,24 @@
 import * as THREE from 'three';
 
-import { Camera, Render, Sizes, Plane, Scroll, MouseTracking,Time } from './Utils'
+import { Camera, Render, Sizes, Plane, Scroll, MouseTracking,Time, LoadImages } from './Utils'
 
 export default class Webgl {
 	constructor({ imagesElement, activeOrbitControls, planeParameters, uniforms, vertexShader, fragmentShader, onUpdate }) {
-		window.webgl = this;
-
     this.sizes = new Sizes();
     this.time = new Time();
     this.canvas = document.querySelector('canvas');
     this.imagesElements = imagesElement
     
     this.scroll = new Scroll(this);
-    
-    this.initWebgl({activeOrbitControls, planeParameters, uniforms, vertexShader, fragmentShader });
-    
-    this.mouseTracking = new MouseTracking(this);
 
-    this.onResizeWindow();
-    this.animate(onUpdate);
+    new LoadImages(this.imagesElements, () => {
+      window.webgl = this;
+
+      this.setup({ activeOrbitControls, planeParameters, uniforms, vertexShader, fragmentShader, onUpdate })
+    })
 	}
 
-  initWebgl({ activeOrbitControls, planeParameters, uniforms, vertexShader, fragmentShader }) {
+  setup({ activeOrbitControls, planeParameters, uniforms, vertexShader, fragmentShader, onUpdate }) {
     this.scene = new THREE.Scene();
     this.camera = new Camera(this, { activeOrbitControls });
     
@@ -36,6 +33,11 @@ export default class Webgl {
     })
 
     this.render = new Render(this);
+      
+    this.mouseTracking = new MouseTracking(this);
+      
+    this.onResizeWindow();
+    this.animate(onUpdate);
   }
 
   onResizeWindow() {
