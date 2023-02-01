@@ -1,7 +1,7 @@
 import LocomotiveScroll from 'locomotive-scroll';
 
 export default class Scroll {
-	constructor(webgl) {
+	constructor(webgl, { direction }) {
 		this.webgl = webgl;
 
 		this.mainContainer = document.querySelector('main');
@@ -13,6 +13,7 @@ export default class Scroll {
     	smooth: true,
 			getDirection: true,
 			getSpeed: true,
+			direction,
 		});
 
 		this.scrollDirection = null;
@@ -24,17 +25,6 @@ export default class Scroll {
 		this.instance.on('scroll', args => {
 			this.scrollDirection = args.direction;
 			this.scrollSpeed = this.instance.scroll.instance.speed
-
-			for (const [key, value] of Object.entries(args.currentElements)) {
-				if(this.scrollDirection === 'down') {
-					if(value.progress > 0.995) {
-						this.mainContainer.append(value.el)
-						this.instance.update()
-					}
-				} else {
-					// console.log('view')
-				}
-			}
 		})
 	}
 }

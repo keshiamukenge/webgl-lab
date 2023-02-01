@@ -3,13 +3,13 @@ import * as THREE from 'three';
 import { Camera, Render, Sizes, Plane, Scroll, MouseTracking,Time, LoadImages } from './Utils'
 
 export default class Webgl {
-	constructor({ imagesElement, activeOrbitControls, planeParameters, uniforms, vertexShader, fragmentShader, onUpdate }) {
+	constructor({ imagesElement, activeOrbitControls, planeParameters, uniforms, vertexShader, fragmentShader, onUpdate, scrollDirection }) {
     this.sizes = new Sizes();
     this.time = new Time();
     this.canvas = document.querySelector('canvas');
     this.imagesElements = imagesElement
-    
-    this.scroll = new Scroll(this);
+
+    this.scroll = new Scroll(this, { direction: scrollDirection });
 
     new LoadImages(this.imagesElements, () => {
       window.webgl = this;
@@ -28,12 +28,11 @@ export default class Webgl {
         planeParameters,
         uniforms,
         vertexShader,
-        fragmentShader
+        fragmentShader,
       });
     })
-
+    
     this.render = new Render(this);
-      
     this.mouseTracking = new MouseTracking(this);
       
     this.onResizeWindow();
@@ -72,6 +71,7 @@ export default class Webgl {
     
     this.planes.forEach(plane => {
       plane.update();
+      plane.updateSize();
     })
 
     this.onUpdate(onUpdate)

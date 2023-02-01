@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import gsap from 'gsap';
 
 export default class MouseTracking {
 	constructor(webgl) {
@@ -7,9 +8,10 @@ export default class MouseTracking {
     this.scene = this.webgl.scene;
     this.camera = this.webgl.camera;
     this.render = this.webgl.render;
+    this.planes = this.webgl.planes;
 
     this.setInstances();
-    this.update();
+    // this.update();
 
     window.addEventListener('mousemove', (event) => {
       this.onMouseMove(event);
@@ -29,10 +31,5 @@ export default class MouseTracking {
   update() {
     this.raycaster.setFromCamera(this.coordinates, this.camera.instance);
     this.intersects = this.raycaster.intersectObjects(this.scene.children);
-	
-    if(this.intersects.length > 0) {
-			// document.style.cursor = "pointer";
-      this.intersects[0].object.callback(this.intersects[0].object);
-    }
   }
 }
