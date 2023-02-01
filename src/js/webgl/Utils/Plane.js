@@ -9,6 +9,7 @@ export default class Plane {
 		this.sizes = this.webgl.sizes;
 		this.viewportSizes = this.webgl.viewportSizes;
 		this.scroll = this.webgl.scroll;
+		this.mouse = this.webgl.mouse;
 
     this.imageElement = imgElement;
     this.image = {
@@ -23,18 +24,7 @@ export default class Plane {
     };
 
     this.texture = new THREE.TextureLoader().load(this.image.src);
-
-    this.setupPlane({ planeParameters, uniforms, vertexShader, fragmentShader });
-  }
-
-  setupPlane({ planeParameters, uniforms, vertexShader, fragmentShader }) {
-    this.geometry = new THREE.PlaneGeometry(
-			planeParameters.width,
-			planeParameters.height,
-			planeParameters.widthSegments,
-			planeParameters.heightSegments
-		);
-    this.material = new THREE.ShaderMaterial({
+		this.materialTemplate = new THREE.ShaderMaterial({
 			transparent: true,
 			uniforms: {
 				tMap: { value: this.texture },
@@ -53,22 +43,27 @@ export default class Plane {
 			},
 			vertexShader,
 			fragmentShader,
-		});
+		})
+
+    this.setupPlane({ planeParameters, uniforms });
+  }
+
+  setupPlane({ planeParameters }) {
+    this.geometry = new THREE.PlaneGeometry(
+			planeParameters.width,
+			planeParameters.height,
+			planeParameters.widthSegments,
+			planeParameters.heightSegments
+		);
+
+    this.material = this.materialTemplate.clone()
+		this.material.uniforms = THREE.UniformsUtils.clone(this.materialTemplate.uniforms);
+  	this.material.vertexShader = this.materialTemplate.vertexShader;
+  	this.material.fragmentShader = this.materialTemplate.fragmentShader;
+
     this.instance = new THREE.Mesh(this.geometry, this.material);
     this.instance.scale.set(this.image.width, this.image.height, 1);
 		this.instanceOffset = this.instance.scale.y / 2;
-
-		this.instance.callback = (mesh) => {
-			window.addEventListener('click', () => {
-				this.image.selected = true
-				// gsap.to(mesh.position, {
-				// 	x: this.sizes.width * 0.5 + mesh.position.x,
-				// 	y: this.sizes.viewportOffset - mesh.position.y,
-				// 	z: 5,
-				// 	duration: 1
-				// })
-			})
-		}
 
 		this.scene.add(this.instance);
   }
@@ -90,11 +85,11 @@ export default class Plane {
   }
 
   updatePlanePosition() {
-			this.instance.position.set(
-				this.image.left - this.webgl.sizes.width / 2 + this.image.width / 2,
-				this.image.top + this.webgl.sizes.height / 2 - this.image.height / 2,
-				1,
-			);
+		this.instance.position.set(
+			this.image.left - this.webgl.sizes.width / 2 + this.image.width / 2,
+			this.image.top + this.webgl.sizes.height / 2 - this.image.height / 2,
+			1,
+		);
   }
 
 	update() {
