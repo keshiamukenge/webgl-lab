@@ -7,6 +7,7 @@ export default class SplitText {
 
 		this.paragraph = {
 			el: element,
+			text: element.innerText,
 			right: element.getBoundingClientRect().right,
 			left: element.getBoundingClientRect().left,
 		};

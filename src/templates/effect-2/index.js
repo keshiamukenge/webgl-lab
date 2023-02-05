@@ -143,18 +143,10 @@ varying vec2 vUv;
 varying float vWave;
 
 void main() {
-  vec2 uv = vUv;
-  
-  if (uv.x > uv.y * uAspect) {
-    uv.x = uv.y * uAspect;
-  } else {
-    uv.y = uv.x / uAspect;
-  }
-
-	float wave = vWave * 0.00025;
+	float wave = vWave * 0.001;
 
   float r = texture2D(tMap, vUv + wave).r;
-  float g = texture2D(tMap, vUv + wave).g;
+  float g = texture2D(tMap, vUv).g;
   float b = texture2D(tMap, vUv + wave).b;
 
   vec3 texture = vec3(r, g, b);
@@ -199,40 +191,52 @@ const webgl = new Webgl({
 let clickedMesh = null;
 let isOpen = false;
 let clickedImage = null;
+const boundingBox = new THREE.Box3();
 
 function onClick() {
   if(!isOpen) {
     if(webgl.mouseTracking.intersects?.length > 0) {
+      window.removeEventListener('click', onClick);
       isOpen = !isOpen;
       clickedMesh = webgl.mouseTracking.intersects[0].object;
+      
+      boundingBox.setFromObject(clickedMesh);
+      const center = boundingBox.getCenter(new THREE.Vector3());
     
       webgl.planes.forEach(plane => {
         if(plane.instance.uuid === clickedMesh.uuid) {
           clickedImage = plane.imageElement;
-          gsap.to(clickedImage, {
-            x: (window.innerWidth / 2 - (clickedImage.getBoundingClientRect().width * 0.8)) - (clickedImage.getBoundingClientRect().left),
-            y: (window.innerHeight / 2 - (clickedImage.getBoundingClientRect().height * 0.8)) -(clickedImage.getBoundingClientRect().top),
-            duration: 0.7,
-            delay: 0.6,
-            width: clickedImage.getBoundingClientRect().width * 1.8,
-            height: clickedImage.getBoundingClientRect().height * 1.8,
-            onComplete: () => {
-              gsap.to('.item-1__text div span', {
-                y: 0,
-                duration: 0.6,
-                stagger: 0.05
-              })
-            }
+          gsap.to(plane.imageElement, {
+            scaleX: 1.5,
+            scaleY: 1.5,
+            duration: 0.8,
+            delay: 0.2,
+            ease: Power2.easeInOut
+          })
+
+          gsap.to('.item-1__text div span', {
+            y: 0,
+            duration: 0.6,
+            stagger: 0.05,
+            delay: 0.2
           })
         }
         
         if(plane.instance.uuid !== clickedMesh.uuid) {
           gsap.to(plane.instance.material.uniforms.uAlpha, {
             value: 0.0,
-            duration: 0.5,
+            duration: 0.8,
             onComplete: () => {
               plane.instance.visible = false;
             }
+          })
+
+          gsap.to(webgl.camera.instance.position, {
+            x: center.x,
+            y: center.y,
+            duration: 1,
+            delay: 0.4,
+            ease: Power2.easeInOut,
           })
         }
       })
@@ -243,36 +247,35 @@ function onClick() {
         y: 100 + "%",
         duration: 0.6,
         stagger: 0.05,
+      })
+
+      gsap.to(clickedImage, {
+        scaleX: 1,
+        scaleY: 1,
+        duration: 0.8,
+        delay: 0.5,
+        ease: Power2.easeInOut
+      })
+
+      gsap.to(webgl.camera.instance.position, {
+        x: 0,
+        y: 0,
+        duration: 1,
+        delay: 0.4,
+        ease: Power2.easeInOut,
         onComplete: () => {
-          gsap.to(clickedImage, {
-            x: 0,
-            y: 0,
-            duration: 1,
-            width: clickedImage?.getBoundingClientRect().width / 1.8,
-            height: clickedImage?.getBoundingClientRect().height / 1.8,
-            onComplete: () => {
-              webgl.planes.forEach(plane => {
-                if(plane.instance.uuid !== clickedMesh.uuid) {
-                  gsap.to(plane.instance, {
-                    visible: true,
-                    duration: 0.7,
-                  })
-                  gsap.to(plane.instance.material.uniforms.uAlpha, {
-                    value: 0.8,
-                    duration: 0.7,
-                    onComplete: () => {
-                      gsap.to(plane.instance.material.uniforms.uFrequence, {
-                        value: 0.0,
-                        duration: 0.5,
-                      })
-                      gsap.to(plane.instance.material.uniforms.uAmplitude, {
-                        value: 0.0,
-                        duration: 0.5,
-                      })
-                      clickedImage = clickedMesh = null;
-                      isOpen = !isOpen;
-                    }
-                  })
+          webgl.planes.forEach(plane => {
+            if(plane.instance.uuid !== clickedMesh.uuid) {
+              gsap.to(plane.instance, {
+                visible: true,
+                duration: 0.5,
+              })
+              gsap.to(plane.instance.material.uniforms.uAlpha, {
+                value: 0.8,
+                duration: 1,
+                onComplete: () => {
+                  clickedImage = clickedMesh = null;
+                  isOpen = !isOpen;
                 }
               })
             }
