@@ -1,5 +1,6 @@
 $black-color: #252422;
 $white-color: #fffcf2;
+$main-font: 'minerva-modern', sans-serif;
 
 * {
   box-sizing: border-box;
@@ -8,6 +9,7 @@ $white-color: #fffcf2;
 html {
   body {
     background-color: $white-color;
+    font-family: $main-font;
 
     header {
       background-color: transparent;
@@ -42,12 +44,16 @@ html {
             }
 
             img {
-              width: 100%;
-              height: 100%;
               visibility: hidden;
             }
           }
         }
+      }
+    }
+
+    .container-disable-msg {
+      p {
+        color: $black-color;
       }
     }
   }

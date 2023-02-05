@@ -27,12 +27,21 @@ export default class Plane {
 		this.materialTemplate = new THREE.ShaderMaterial({
 			transparent: true,
 			uniforms: {
-				tMap: { value: this.texture },
-				uPlaneSizes: { value: new THREE.Vector2(0, 0) },
-				uImageSizes: { value: new THREE.Vector2(0, 0) },
-				uViewportSizes: { value: new THREE.Vector2(this.sizes.width, this.sizes.height) },
-    		uStrength: { value: 0 },
-				uTime: { value: 0 },
+				tMap: {
+					value: this.texture
+				},
+				uAspect: {
+					value: new THREE.Vector2(0, 0)
+				},
+				uViewportSizes: {
+					value: new THREE.Vector2(this.sizes.width, this.sizes.height)
+				},
+    		uStrength: {
+					value: 0
+				},
+				uTime: {
+					value: 0
+				},
 				uHover: {
 					value: new THREE.Vector2(0.5, 0.5),
 				},
@@ -62,37 +71,39 @@ export default class Plane {
   	this.material.fragmentShader = this.materialTemplate.fragmentShader;
 
     this.instance = new THREE.Mesh(this.geometry, this.material);
-    this.instance.scale.set(this.image.width, this.image.height, 1);
+    this.instance.position.set(
+			this.image.left + this.image.width / 2 - this.webgl.sizes.width / 2,
+			this.webgl.sizes.height / 2 - this.image.top - this.image.height / 2,
+			0.5,
+		);
 		this.instanceOffset = this.instance.scale.y / 2;
 
 		this.scene.add(this.instance);
   }
 
-  updateImageSize() {
-    this.image.width = this.instance.material.uniforms.uImageSizes.x = this.imageElement.getBoundingClientRect().width;
-    this.image.height = this.instance.material.uniforms.uImageSizes.y = this.imageElement.getBoundingClientRect().height;
-    this.image.aspect = this.imageElement.offsetWidth / this.imageElement.offsetHeight;
+  updateImagePosition() {
+    this.image.top = this.imageElement.getBoundingClientRect().top;
+    this.image.left = this.imageElement.getBoundingClientRect().left;
   }
 
-  updateImagePosition() {
-    this.image.top = -this.imageElement.getBoundingClientRect().top;
-    this.image.left = this.imageElement.getBoundingClientRect().left;
+  updatePlanePosition() {
+    this.instance.position.set(
+			this.image.left + this.image.width / 2 - this.webgl.sizes.width / 2,
+			this.webgl.sizes.height / 2 - this.image.top - this.image.height / 2,
+			0.5,
+		);
   }
 
   updatePlaneSize() {
     this.instance.scale.set(this.image.width, this.image.height, 1);
-		this.instance.material.uniforms.uPlaneSizes.value = [this.instance.scale.x, this.instance.scale.y]
   }
 
-  updatePlanePosition() {
-		this.instance.position.set(
-			this.image.left - this.webgl.sizes.width / 2 + this.image.width / 2,
-			this.image.top + this.webgl.sizes.height / 2 - this.image.height / 2,
-			1,
-		);
-  }
+	updateImageSize() {
+		this.image.width = this.imageElement.getBoundingClientRect().width;
+    this.image.height = this.imageElement.getBoundingClientRect().height;
+	}
 
-	update() {
+	updatePosition() {
 		this.updateImagePosition();
 		this.updatePlanePosition();
 
@@ -102,5 +113,8 @@ export default class Plane {
 	updateSize() {
 		this.updatePlaneSize();
 		this.updateImageSize();
+		this.instance.material.uniforms.uAspect.value = this.image.width / this.image.height;
+
+		this.texture.needsUpdate = true;
 	}
 }

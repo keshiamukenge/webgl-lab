@@ -1,0 +1,52 @@
+$black-color: #000000;
+$white-color: #f5f5f5;
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  body {
+    header {
+      background-color: $white-color;
+
+      a,
+      span {
+        color: $black-color;
+      }
+    }
+
+    font-weight: 700;
+    font-style: normal;
+    text-transform: uppercase;
+    background-color: $white-color;
+
+    header {
+      background-color: transparent;
+    }
+
+    main {
+      display: flex;
+      justify-content: space-between;
+
+      div {
+        width: 30%;
+        height: 500px;
+        position: relative;
+        margin-top: 200px;
+        background-color: $black-color;
+
+        canvas {
+          position: absolute;
+          z-index: 9;
+        }
+      }
+    }
+
+    .container-disable-msg {
+      p {
+        color: $white-color;
+      }
+    }
+  }
+}

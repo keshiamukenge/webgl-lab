@@ -1,9 +1,26 @@
 import * as THREE from 'three';
 
-import { Camera, Render, Sizes, Plane, Scroll, MouseTracking,Time, LoadImages } from './Utils'
+import { Camera, Render, Sizes, Plane, Scroll, MouseTracking,Time, LoadImages, Model, Light } from './Utils'
 
 export default class Webgl {
-	constructor({ imagesElement, activeOrbitControls, planeParameters, uniforms, vertexShader, fragmentShader, onUpdate, scrollDirection }) {
+	constructor({
+    type,
+    imagesElement,
+    activeOrbitControls,
+    planeParameters,
+    uniforms,
+    vertexShader,
+    fragmentShader,
+    onUpdate,
+    scrollDirection,
+    ambientLight,
+    directionalLight,
+    models,
+    onClick
+  }) {
+    this.type = type;
+    this.ambientLight = ambientLight;
+    this.directionalLight = directionalLight;
     this.sizes = new Sizes();
     this.time = new Time();
     this.canvas = document.querySelector('canvas');
@@ -11,14 +28,28 @@ export default class Webgl {
 
     this.scroll = new Scroll(this, { direction: scrollDirection });
 
-    new LoadImages(this.imagesElements, () => {
-      window.webgl = this;
+    if(this.type === "geometry") {
+      new LoadImages(this.imagesElements, () => {
+        window.webgl = this;
+        
+        this.setupPlanes({ activeOrbitControls, planeParameters, uniforms, vertexShader, fragmentShader, onUpdate, onClick })
+      })
+    }
 
-      this.setup({ activeOrbitControls, planeParameters, uniforms, vertexShader, fragmentShader, onUpdate })
-    })
+    if(this.type === "model") {
+      this.setupModel({ onUpdate, models });
+    }
+
+    // if(this.ambientLight) {
+    //   new Light(this).addAmbientLight();
+    // }
+
+    // if(this.directionalLight) {
+    //   new Light(this).addDirectionalLight();
+    // }
 	}
 
-  setup({ activeOrbitControls, planeParameters, uniforms, vertexShader, fragmentShader, onUpdate }) {
+  setupPlanes({ activeOrbitControls, planeParameters, uniforms, vertexShader, fragmentShader, onUpdate, onClick }) {
     this.scene = new THREE.Scene();
     this.camera = new Camera(this, { activeOrbitControls });
     
@@ -32,25 +63,48 @@ export default class Webgl {
       });
     })
     
-    this.render = new Render(this);
-    this.mouseTracking = new MouseTracking(this);
+    this.render = new Render(this, { canvas: document.querySelector('canvas') });
+    this.mouseTracking = new MouseTracking(this, { onClick });
       
-    this.onResizeWindow();
+    this.onResizeWindow({ model: null });
     this.animate(onUpdate);
   }
 
-  onResizeWindow() {
+  setupModel({ onUpdate, models, onClick }) {
+    this.models = models.map(model => {
+      let scene = new THREE.Scene();
+      let camera = new Camera(this, { activeOrbitControls: model.activeOrbitControls, model, scene });
+      let gltfModel = new Model(this, {
+        model,
+        scene: scene,
+      });
+      let render = new Render(this, { canvas: model.canvas, model });
+      new Light(this, { scene }).addAmbientLight();
+      new Light(this, { scene }).addDirectionalLight();
+
+      this.onResizeWindow({ model });
+
+      return {
+        scene: scene,
+        camera: camera,
+        model: gltfModel,
+        render: render
+      };
+    })
+
+    this.mouseTracking = new MouseTracking(this, { onClick });
+      
+    this.animate(onUpdate);
+  }
+
+  onResizeWindow({ model }) {
     window.addEventListener('resize', () => {
       this.sizes.width = window.innerWidth;
       this.sizes.height = window.innerHeight;
 
-      this.planes.forEach(plane => {
-        plane.updateSize();
-      })
+      this?.camera?.update();
 
-      this.camera.update();
-
-      this.render.onResize();
+      this.render.onResize({ model });
     });
   }
 
@@ -69,15 +123,22 @@ export default class Webgl {
 
     this.time.tick();
     
-    this.planes.forEach(plane => {
-      plane.update();
-      plane.updateSize();
-    })
+    if(this.type === "geometry") {
+      this.planes.forEach(plane => {
+        plane.updatePosition();
+        plane.updateSize();
+      })
+
+      this.mouseTracking.update({ camera: null, model: null });
+      this.render.onUpdate();
+    }
 
     this.onUpdate(onUpdate)
 
-    this.mouseTracking.update();
-    
-    this.render.onUpdate();
+    if(this.type === "model") {
+      this.models.forEach(model => {
+        model.render.instance.render(model.scene, model.camera.instance);
+      })
+    }
   }
 }
