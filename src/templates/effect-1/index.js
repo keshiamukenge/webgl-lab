@@ -44,6 +44,7 @@ import Webgl from '../../js/webgl/Webgl'
 			`
 			
 			const webgl = new Webgl({
+				type: "geometry",
 				imagesElement: document.querySelectorAll('img.grid-img'),
 				scrollDirection: "vertical",
 				activeOrbitControls: false,

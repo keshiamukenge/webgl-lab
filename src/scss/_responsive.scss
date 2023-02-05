@@ -1,0 +1,53 @@
+$main-font: 'minerva-modern', sans-serif;
+
+@media screen and (max-width: 789px) {
+  html {
+    body {
+      font-family: $main-font;
+
+      * {
+        display: none;
+      }
+
+      header {
+        display: flex;
+
+        nav,
+        a {
+          display: block;
+        }
+      }
+
+      main {
+        display: none !important;
+      }
+
+      .container-disable-msg {
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+        display: block;
+
+        p {
+          font-size: 20px;
+          font-weight: 400;
+          width: 40%;
+          height: fit-content;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          display: block;
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 789px) {
+  .container-disable-msg,
+  p {
+    display: none;
+  }
+}

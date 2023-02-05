@@ -3,8 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <link href="./index.scss" rel="stylesheet" />
     <link href="../../scss/main.scss" rel="stylesheet" />
+    <link href="./index.scss" rel="stylesheet" />
+    <link href="../../scss/_responsive.scss" rel="stylesheet" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Voici un exemple de" />
     <title>Webgl</title>
@@ -17,11 +18,13 @@
       <span>Effet 2</span>
     </header>
     <main data-scroll-container>
+      <p class="item-1__text">
+        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quas itaque
+        facilis molestiae rerum, deserunt ducimus optio hic tempora, minus, non
+        dolorum quam temporibus consequatur error unde nulla? Nemo, ad facere!
+      </p>
       <section class="sliders">
         <ul class="slider-1">
-          <li>
-            <img src="/images/effect-2/1.png" />
-          </li>
           <li>
             <img src="/images/effect-2/2.png" />
           </li>
@@ -34,14 +37,8 @@
           <li>
             <img src="/images/effect-2/5.png" />
           </li>
-          <li>
-            <img src="/images/effect-2/6.png" />
-          </li>
         </ul>
         <ul class="slider-2">
-          <li>
-            <img src="/images/effect-2/7.png" />
-          </li>
           <li>
             <img src="/images/effect-2/8.png" />
           </li>
@@ -54,12 +51,12 @@
           <li>
             <img src="/images/effect-2/11.png" />
           </li>
-          <li>
-            <img src="/images/effect-2/12.png" />
-          </li>
         </ul>
       </section>
     </main>
+    <div class="container-disable-msg">
+      <p>Not available for mobile or tablet format. Go to the desktop format</p>
+    </div>
     <canvas></canvas>
     <script type="module" src="./index.js"></script>
   </body>

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Perfume Bottle
+* source:	https://sketchfab.com/3d-models/perfume-bottle-7fb074117e104c5280e7360bce962267
+* author:	Michaela Blanchfield (https://sketchfab.com/michaelablanchfield)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Perfume Bottle" (https://sketchfab.com/3d-models/perfume-bottle-7fb074117e104c5280e7360bce962267) by Michaela Blanchfield (https://sketchfab.com/michaelablanchfield) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

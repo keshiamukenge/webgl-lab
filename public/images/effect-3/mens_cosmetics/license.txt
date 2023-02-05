@@ -1,0 +1,11 @@
+Model Information:
+* title:	men's cosmetics
+* source:	https://sketchfab.com/3d-models/mens-cosmetics-bb0f36e3b5cd4f068536e5f0d74f9d27
+* author:	godlike (https://sketchfab.com/thisisruslan)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "men's cosmetics" (https://sketchfab.com/3d-models/mens-cosmetics-bb0f36e3b5cd4f068536e5f0d74f9d27) by godlike (https://sketchfab.com/thisisruslan) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

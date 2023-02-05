@@ -2,6 +2,7 @@ import gsap, { Power2 } from 'gsap'
 import * as THREE from 'three'
 
 import Webgl from '../../js/webgl/Webgl'
+import SplitText from '../../js/SplitText'
 
 // WEBGL
 const vertexShader = `
@@ -25,7 +26,7 @@ vec4 mod289(vec4 x) {
 }
 
 vec4 permute(vec4 x) {
-     return mod289(((x*34.0)+1.0)*x);
+  return mod289(((x*34.0)+1.0)*x);
 }
 
 vec4 taylorInvSqrt(vec4 r)
@@ -129,19 +130,27 @@ void main() {
 	gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
 
 	vUv = uv;
-}
-`
+}`
 
 const fragmentShader = `
 precision mediump float;
 
 uniform sampler2D tMap;
 uniform float uAlpha;
+uniform float uAspect;
 
 varying vec2 vUv;
 varying float vWave;
 
 void main() {
+  vec2 uv = vUv;
+  
+  if (uv.x > uv.y * uAspect) {
+    uv.x = uv.y * uAspect;
+  } else {
+    uv.y = uv.x / uAspect;
+  }
+
 	float wave = vWave * 0.00025;
 
   float r = texture2D(tMap, vUv + wave).r;
@@ -150,12 +159,12 @@ void main() {
 
   vec3 texture = vec3(r, g, b);
   gl_FragColor = vec4(texture, uAlpha);
-}
-`
+}`
 
 const clock = new THREE.Clock();
 
 const webgl = new Webgl({
+  type: "geometry",
 	imagesElement: document.querySelectorAll('img'),
   scrollDirection: "horizontal",
 	activeOrbitControls: false,
@@ -173,7 +182,7 @@ const webgl = new Webgl({
       value: 0.0
     },
     uAlpha: {
-      value: 0.8
+      value: 0.0
     }
   },
 	vertexShader: vertexShader,
@@ -181,44 +190,136 @@ const webgl = new Webgl({
 	onUpdate: () => {
 		onUpdate()
     onEnter()
-	}
+	},
+  onClick: () => {
+    onClick();
+  }
 })
 
-function onEnter() {
-  if(webgl.mouseTracking.intersects?.length > 0) {
-    const intersectedMesh = webgl.mouseTracking.intersects[0].object;
+let clickedMesh = null;
+let isOpen = false;
+let clickedImage = null;
 
-    gsap.to(intersectedMesh.material.uniforms.uFrequence, {
-      value: 25.5,
-      duration: 2,
-    });
-
-    gsap.to(intersectedMesh.material.uniforms.uAmplitude, {
-      value: 2.5,
-      duration: 2,
-    });
-
-    gsap.to(intersectedMesh.material.uniforms.uAlpha, {
-      value: 1.0,
-      duration: 1,
-    });
+function onClick() {
+  if(!isOpen) {
+    if(webgl.mouseTracking.intersects?.length > 0) {
+      isOpen = !isOpen;
+      clickedMesh = webgl.mouseTracking.intersects[0].object;
+    
+      webgl.planes.forEach(plane => {
+        if(plane.instance.uuid === clickedMesh.uuid) {
+          clickedImage = plane.imageElement;
+          gsap.to(clickedImage, {
+            x: (window.innerWidth / 2 - (clickedImage.getBoundingClientRect().width * 0.8)) - (clickedImage.getBoundingClientRect().left),
+            y: (window.innerHeight / 2 - (clickedImage.getBoundingClientRect().height * 0.8)) -(clickedImage.getBoundingClientRect().top),
+            duration: 0.7,
+            delay: 0.6,
+            width: clickedImage.getBoundingClientRect().width * 1.8,
+            height: clickedImage.getBoundingClientRect().height * 1.8,
+            onComplete: () => {
+              gsap.to('.item-1__text div span', {
+                y: 0,
+                duration: 0.6,
+                stagger: 0.05
+              })
+            }
+          })
+        }
+        
+        if(plane.instance.uuid !== clickedMesh.uuid) {
+          gsap.to(plane.instance.material.uniforms.uAlpha, {
+            value: 0.0,
+            duration: 0.5,
+            onComplete: () => {
+              plane.instance.visible = false;
+            }
+          })
+        }
+      })
+    }
   } else {
-    webgl.planes.forEach(plane => {
-      gsap.to(plane.material.uniforms.uFrequence, {
-        value: 0.0,
-        duration: 2,
-      });
-  
-      gsap.to(plane.material.uniforms.uAmplitude, {
-        value: 0.0,
-        duration: 2,
-      });
+    if(clickedImage) {
+      gsap.to('.item-1__text div span', {
+        y: 100 + "%",
+        duration: 0.6,
+        stagger: 0.05,
+        onComplete: () => {
+          gsap.to(clickedImage, {
+            x: 0,
+            y: 0,
+            duration: 1,
+            width: clickedImage?.getBoundingClientRect().width / 1.8,
+            height: clickedImage?.getBoundingClientRect().height / 1.8,
+            onComplete: () => {
+              webgl.planes.forEach(plane => {
+                if(plane.instance.uuid !== clickedMesh.uuid) {
+                  gsap.to(plane.instance, {
+                    visible: true,
+                    duration: 0.7,
+                  })
+                  gsap.to(plane.instance.material.uniforms.uAlpha, {
+                    value: 0.8,
+                    duration: 0.7,
+                    onComplete: () => {
+                      gsap.to(plane.instance.material.uniforms.uFrequence, {
+                        value: 0.0,
+                        duration: 0.5,
+                      })
+                      gsap.to(plane.instance.material.uniforms.uAmplitude, {
+                        value: 0.0,
+                        duration: 0.5,
+                      })
+                      clickedImage = clickedMesh = null;
+                      isOpen = !isOpen;
+                    }
+                  })
+                }
+              })
+            }
+          })
+        }
+      })
+    }
+  }
+}
 
-      gsap.to(plane.material.uniforms.uAlpha, {
-        value: 0.8,
+function onEnter() {
+  if(!isOpen) {
+    if(webgl.mouseTracking.intersects?.length > 0) {
+      const intersectedMesh = webgl.mouseTracking.intersects[0].object;
+      
+      gsap.to(intersectedMesh.material.uniforms.uFrequence, {
+        value: 25.5,
+        duration: 2,
+      });
+      
+      gsap.to(intersectedMesh.material.uniforms.uAmplitude, {
+        value: 2.5,
+        duration: 2,
+      });
+      
+      gsap.to(intersectedMesh.material.uniforms.uAlpha, {
+        value: 1.0,
         duration: 1,
       });
-    })
+    } else {
+        webgl.planes.forEach(plane => {
+          gsap.to(plane.material.uniforms.uFrequence, {
+            value: 0.0,
+            duration: 2,
+          });
+          
+          gsap.to(plane.material.uniforms.uAmplitude, {
+            value: 0.0,
+            duration: 2,
+          });
+          
+          gsap.to(plane.material.uniforms.uAlpha, {
+            value: 0.8,
+            duration: 1,
+          });
+        })
+    }
   }
 }
 
@@ -228,28 +329,4 @@ function onUpdate() {
 	})
 }
 
-// SCROLL
-const sliders = document.querySelectorAll('ul');
-const itemsSlider1 = sliders[0].querySelectorAll('li')
-const itemsSlider2 = sliders[1].querySelectorAll('li')
-
-const scroll = webgl.scroll.instance;
-
-  scroll.on('scroll', () => {
-    // const container = document.querySelector('.container-slider-1')
-    //   const slider1 = document.querySelector('.slider-1');
-    //   const slider1Copy = document.querySelector('.slider-1__copy');
-    //   const slider1Width = slider1.offsetWidth;
-    //   const slider1CopyWidth = slider1Copy.offsetWidth;
-
-    //   console.log(slider1Width, slider1CopyWidth)
-    // if (scroll.scroll.instance.scroll.x > slider1Width) {
-    //   container.removeChild(container[0]);
-    //   container.appendChild(container[0]);
-    // }
-
-    // if (scroll.scroll.instance.scroll.x > slider1CopyWidth) {
-    //   container.removeChild(slider1Copy);
-    //   container.appendChild(slider1Copy);
-    // }
-  })
+new SplitText('.item-1__text', "5px");

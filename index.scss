@@ -1,16 +1,24 @@
 $black-color: #252422;
 $white-color: #fffcf2;
+$main-font: 'minerva-modern', sans-serif;
 
 html {
   body {
     background-color: $white-color;
-    font-family: 'Arial';
+    font-family: $main-font;
+
+    header {
+      nav {
+        a {
+          color: $black-color;
+        }
+      }
+    }
 
     main {
       width: 100vw;
-      min-height: 100vh;
       height: fit-content;
-      padding: 0 4rem;
+      padding: 0 2rem;
 
       ul {
         width: 100%;
@@ -19,8 +27,8 @@ html {
 
         li {
           height: fit-content;
-          border-bottom: solid 2px $black-color;
-          padding: 2rem 0;
+          border-bottom: solid 1px $black-color;
+          padding: 1rem 0;
 
           &:hover {
             cursor: pointer;
