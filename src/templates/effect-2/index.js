@@ -218,7 +218,7 @@ function onClick() {
             y: 0,
             duration: 0.6,
             stagger: 0.05,
-            delay: 0.2
+            delay: 1
           })
         }
         
