@@ -63,6 +63,6 @@ import Webgl from '../../js/webgl/Webgl'
 			
 			function onUpdate() {
 				webgl.planes.forEach(plane => {
-					plane.material.uniforms.uStrength.value = (webgl.scroll.instance.scroll.instance.speed / webgl.sizes.width) * 1000;
+					plane.material.uniforms.uStrength.value = (webgl.scroll.instance.scroll.instance.speed / webgl.sizes.width) * 5000;
 				})
 			}

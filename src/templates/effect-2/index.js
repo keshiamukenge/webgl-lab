@@ -158,7 +158,7 @@ const clock = new THREE.Clock();
 const webgl = new Webgl({
   type: "geometry",
 	imagesElement: document.querySelectorAll('img'),
-  scrollDirection: "horizontal",
+  scrollDirection: "vertical",
 	activeOrbitControls: false,
 	planeParameters: {
 		width: 1,

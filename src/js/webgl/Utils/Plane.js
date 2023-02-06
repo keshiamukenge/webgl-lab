@@ -106,15 +106,11 @@ export default class Plane {
 	updatePosition() {
 		this.updateImagePosition();
 		this.updatePlanePosition();
-
-		this.texture.needsUpdate = true;
 	}
 
 	updateSize() {
 		this.updatePlaneSize();
 		this.updateImageSize();
 		this.instance.material.uniforms.uAspect.value = this.image.width / this.image.height;
-
-		this.texture.needsUpdate = true;
 	}
 }
