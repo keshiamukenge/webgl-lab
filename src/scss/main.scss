@@ -2,7 +2,7 @@
 @import './_locomotive-scroll.scss';
 @import './_reset.scss';
 
-$black-color: #252422;
+$black-color: #000000;
 $white-color: #fffcf2;
 $main-font: 'minerva-modern', sans-serif;
 
@@ -25,7 +25,8 @@ html {
       background-color: $white-color;
       max-width: 1440px;
       margin: auto;
-      z-index: 999;
+      position: relative;
+      z-index: 99999;
       display: flex;
       justify-content: space-between;
       font-family: $main-font;

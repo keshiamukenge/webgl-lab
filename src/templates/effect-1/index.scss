@@ -1,4 +1,4 @@
-$black-color: #252422;
+$black-color: #000000;
 $white-color: #fffcf2;
 $main-font: 'minerva-modern', sans-serif;
 
@@ -8,7 +8,7 @@ $main-font: 'minerva-modern', sans-serif;
 
 html {
   body {
-    background-color: $white-color;
+    background-color: $black-color;
     font-family: $main-font;
 
     header {
@@ -16,36 +16,122 @@ html {
       display: flex;
       justify-content: space-between;
 
+      nav {
+        a {
+          color: $white-color;
+        }
+      }
+
       span {
         display: inline-block;
+        color: $white-color;
       }
     }
 
+    h1 {
+      font-size: 100px;
+      color: $white-color;
+      font-weight: 600;
+      position: fixed;
+      text-transform: uppercase;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      text-align: center;
+    }
+
     main {
-      .container-grid {
+      img {
+        visibility: hidden;
+      }
+
+      .gallery {
         width: 100%;
-        height: fit-content;
+        height: 400vh;
         position: relative;
-        padding: 0 30%;
-        margin-left: auto;
 
-        div.container-item {
+        div {
           margin-bottom: 2rem;
+          height: auto;
+          position: absolute;
+        }
 
-          div.container-item-content {
-            position: relative;
-            width: 100%;
-            height: 100%;
-
-            a {
-              width: 100%;
-              height: 100%;
-              display: block;
-            }
-
-            img {
-              visibility: hidden;
-            }
+        .container-item {
+          &__1 {
+            width: 30%;
+            top: 0;
+            left: 3%;
+          }
+          &__2 {
+            width: 28%;
+            top: 6%;
+            left: 40%;
+          }
+          &__3 {
+            width: 15%;
+            top: 2%;
+            left: 80%;
+          }
+          &__4 {
+            width: 29%;
+            top: 16%;
+            left: 5%;
+          }
+          &__5 {
+            width: 24%;
+            top: 26%;
+            left: 34%;
+          }
+          &__6 {
+            width: 21%;
+            top: 18.5%;
+            left: 76%;
+          }
+          &__7 {
+            width: 22%;
+            top: 38%;
+            left: 11%;
+          }
+          &__8 {
+            width: 20%;
+            top: 45%;
+            left: 44%;
+          }
+          &__9 {
+            width: 24%;
+            top: 33%;
+            left: 70%;
+          }
+          &__10 {
+            width: 23%;
+            top: 56%;
+            left: 9%;
+          }
+          &__11 {
+            width: 22%;
+            top: 69%;
+            left: 20%;
+          }
+          &__12 {
+            width: 23%;
+            top: 63%;
+            left: 71%;
+          }
+          &__13 {
+            width: 21%;
+            top: 87%;
+            left: 8%;
+          }
+          &__14 {
+            width: 20%;
+            top: 82%;
+            left: 43%;
+          }
+          &__15 {
+            width: 17%;
+            top: 86%;
+            left: 75%;
           }
         }
       }
@@ -53,7 +139,7 @@ html {
 
     .container-disable-msg {
       p {
-        color: $black-color;
+        color: $white-color;
       }
     }
   }
