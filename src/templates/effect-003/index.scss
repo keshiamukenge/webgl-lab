@@ -1,0 +1,42 @@
+$black-color: #000000;
+$white-color: #ffffff;
+
+$main-font: 'minerva-modern', sans-serif;
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  body {
+    font-weight: 700;
+    font-style: normal;
+    text-transform: uppercase;
+    background-color: $black-color;
+
+    header {
+      background-color: transparent;
+
+      a,
+      span {
+        color: $white-color;
+      }
+    }
+
+    main {
+      display: flex;
+      justify-content: center;
+
+      img {
+        width: 30%;
+        visibility: hidden;
+      }
+    }
+
+    .container-disable-msg {
+      p {
+        color: $white-color;
+      }
+    }
+  }
+}

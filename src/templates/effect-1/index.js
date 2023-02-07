@@ -31,12 +31,12 @@ import Webgl from '../../js/webgl/Webgl'
 		vec2 ratio = vec2(
 			min((uPlaneSizes.x / uPlaneSizes.y) / (uImageSizes.x / uImageSizes.y), 1.0),
 			min((uPlaneSizes.y / uPlaneSizes.x) / (uImageSizes.y / uImageSizes.x), 1.0)
-			);
+		);
 			
-			vec2 uv = vec2(
-				vUv.x * ratio.x + (1.0 - ratio.x) * 0.5,
-				vUv.y * ratio.y + (1.0 - ratio.y) * 0.5
-				);
+		vec2 uv = vec2(
+			vUv.x * ratio.x + (1.0 - ratio.x) * 0.5,
+			vUv.y * ratio.y + (1.0 - ratio.y) * 0.5
+		);
 				
 				gl_FragColor.rgb = texture2D(tMap, uv).rgb;
 				gl_FragColor.a = 1.0;
@@ -51,8 +51,8 @@ import Webgl from '../../js/webgl/Webgl'
 				planeParameters: {
 					width: 1,
 					height: 1,
-					widthSegments: 100,
-					heightSegments: 100,
+					widthSegments: 70,
+					heightSegments: 70,
 				},
 				vertexShader: vertexShader,
 				fragmentShader: fragmentShader,
@@ -63,6 +63,6 @@ import Webgl from '../../js/webgl/Webgl'
 			
 			function onUpdate() {
 				webgl.planes.forEach(plane => {
-					plane.material.uniforms.uStrength.value = (webgl.scroll.instance.scroll.instance.speed / webgl.sizes.width) * 5000;
+					plane.material.uniforms.uStrength.value = (webgl.scroll.instance.scroll.instance.speed / webgl.sizes.width) * 3000;
 				})
 			}
