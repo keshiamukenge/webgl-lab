@@ -20,12 +20,14 @@ export default class Plane {
       aspect: this.imageElement.offsetWidth / this.imageElement.offsetHeight,
       top: this.imageElement.getBoundingClientRect().top,
       left: this.imageElement.getBoundingClientRect().left,
-			selected: false,
+			naturalWidth: this.imageElement.naturalWidth,
+			naturalHeight: this.imageElement.naturalHeight,
     };
 
     this.texture = new THREE.TextureLoader().load(this.image.src);
 		this.materialTemplate = new THREE.ShaderMaterial({
 			transparent: true,
+			side: THREE.DoubleSide,
 			uniforms: {
 				tMap: {
 					value: this.texture
@@ -47,6 +49,12 @@ export default class Plane {
 				},
 				uHoverState: {
 					value: 1.0,
+				},
+				uPlaneSizes: {
+					value: new THREE.Vector2(0, 0)
+				},
+				uImageSizes: {
+					value: new THREE.Vector2(0, 0)
 				},
 				...uniforms
 			},
@@ -88,19 +96,31 @@ export default class Plane {
 
   updatePlanePosition() {
     this.instance.position.set(
-			this.image.left + this.image.width / 2 - this.webgl.sizes.width / 2,
-			this.webgl.sizes.height / 2 - this.image.top - this.image.height / 2,
+			this.image.left - this.sizes.width / 2 + this.image.width / 2,
+			- this.image.top + this.sizes.height / 2  - this.image.height / 2,
 			0.5,
 		);
   }
 
   updatePlaneSize() {
-    this.instance.scale.set(this.image.width, this.image.height, 1);
+		const height = 2 * Math.tan(this.camera.instance.fov / 2) * this.camera.instance.position.z
+    const width = height * this.camera.instance.aspect
+
+    this.instance.scale.set(
+			this.image.width,
+			this.image.height,
+			1
+		);
+		this.instance.material.uniforms.uPlaneSizes.value.x = this.instance.scale.x;
+		this.instance.material.uniforms.uPlaneSizes.value.y = this.instance.scale.y;
   }
 
 	updateImageSize() {
 		this.image.width = this.imageElement.getBoundingClientRect().width;
     this.image.height = this.imageElement.getBoundingClientRect().height;
+
+		this.instance.material.uniforms.uImageSizes.value.x = this.image.naturalWidth;
+		this.instance.material.uniforms.uImageSizes.value.y = this.imageElement.naturalHeight;
 	}
 
 	updatePosition() {

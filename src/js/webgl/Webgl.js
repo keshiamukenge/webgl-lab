@@ -67,6 +67,11 @@ export default class Webgl {
     this.mouseTracking = new MouseTracking(this, { onClick });
       
     this.onResizeWindow({ model: null });
+
+    this.planes.forEach(plane => {
+      plane.updateSize();
+    })
+
     this.animate(onUpdate);
   }
 
@@ -103,6 +108,15 @@ export default class Webgl {
       this.sizes.height = window.innerHeight;
 
       this?.camera?.update();
+      this.camera.resize();
+
+      this.planes.forEach(plane => {
+        plane.updateSize();
+        plane.updatePosition();
+
+        console.log("plane : " + plane.instance.scale.x, plane.instance.position.x);
+        console.log("img : " + plane.imageElement.offsetWidth, plane.imageElement.getBoundingClientRect().left);
+      })
 
       this.render.onResize({ model });
     });
@@ -123,22 +137,23 @@ export default class Webgl {
 
     this.time.tick();
     
-    if(this.type === "geometry") {
-      this.planes.forEach(plane => {
-        plane.updatePosition();
-        plane.updateSize();
-      })
+    this.scroll.instance.on('scroll', () => {
+      if(this.type === "geometry") {
+        this.planes.forEach(plane => {
+          plane.updatePosition();
+        })
+      }
+    })
 
-      this.mouseTracking.update({ camera: null, model: null });
-      this.render.onUpdate();
-    }
-
-    this.onUpdate(onUpdate)
-
+    this.mouseTracking.update({ camera: null, model: null });
+    
     if(this.type === "model") {
       this.models.forEach(model => {
         model.render.instance.render(model.scene, model.camera.instance);
       })
     }
+    
+    this.onUpdate(onUpdate)
+    this.render.onUpdate();
   }
 }

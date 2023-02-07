@@ -31,6 +31,7 @@ export default class Camera {
         1000,
         );
         this.instance.fov = 2 * Math.atan((this.webgl.sizes.height / 2) / 600) * (180 / Math.PI);
+        this.instance.aspect = this.sizes.width / this.sizes.height;
         this.instance.position.set(2, 2, 2);
         this.instance.lookAt(scene.position);
         
